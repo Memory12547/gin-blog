@@ -1,8 +1,8 @@
 /*
- * @Author: your name
+ * @Author: Matt Meng
  * @Date: 1970-01-01 08:00:00
- * @LastEditTime: 2020-10-06 19:00:44
- * @LastEditors: your name
+ * @LastEditTime: 2020-10-07 14:26:12
+ * @LastEditors: Matt Meng
  * @Description: In User Settings Edit
  * @FilePath: /go/src/gin-blog/pkg/util/pagination.go
  */
