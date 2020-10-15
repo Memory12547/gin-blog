@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 1970-01-01 08:00:00
- * @LastEditTime: 2020-10-07 12:23:50
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2020-10-15 23:05:55
+ * @LastEditors: Matt Meng
  * @Description: In User Settings Edit
  * @FilePath: /go/src/gin-blog/main.go
  */
@@ -10,21 +10,28 @@ package main
 
 import(
 	"fmt"
-	"net/http"
+	"log"
+	"syscall"
+
+	"github.com/fvbock/endless"
 
 	"gin-blog/pkg/setting"
 	"gin-blog/routers"
 )
 
 func main(){
-	router:=routers.InitRouter()
-	//直接使用http.Server配置参数，而不是用router.Run()
-	s:=&http.Server{
-		Addr: fmt.Sprintf(":%d",setting.HTTPPort),
-		Handler: router,
-		ReadTimeout:setting.ReadTimeout,
-		WriteTimeout:   setting.WriteTimeout,
-        MaxHeaderBytes: 1 << 20,
+	endless.DefaultReadTimeOut = setting.ReadTimeout
+	endless.DefaultWriteTimeOut = setting.WriteTimeout
+	endless.DefaultMaxHeaderBytes = 1<<20
+	endPoint := fmt.Sprintf(":%d",setting.HTTPPort)
+	
+	server := endless.NewServer(endPoint,routers.InitRouter())
+	server.BeforeBegin = func(add string){
+		log.Printf("Article pis is %d",syscall.Getpid())
 	}
-	s.ListenAndServe()
+
+	err := server.ListenAndServe()
+	if err!=nil {
+		log.Printf("Server err: %v",err)
+	}
 }
