@@ -2,7 +2,7 @@
  * @Author: Matt Meng
  * @Date: 1970-01-01 08:00:00
  * @LastEditors: Matt Meng
- * @LastEditTime: 2020-10-08 13:38:35
+ * @LastEditTime: 2020-10-11 11:44:24
  * @Description: file content
  */
 package models
@@ -60,7 +60,7 @@ func GetArticle(id int)(article Article){
 	return
 }
 
-//查询一系列文章,通过Preload来装在对应文章的Tag成员
+//查询一系列文章,通过Preload来装载对应文章的Tag成员
 func GetArticles(pageNum int, pageSize int, maps interface{})(articles []Article){
 	db.Preload("Tag").Where(maps).Offset(pageNum).Limit(pageSize).Find(&articles)
 

@@ -1,7 +1,7 @@
 /*
  * @Author: Matt Meng
  * @Date: 2020-10-07 12:11:22
- * @LastEditTime: 2020-10-08 14:20:34
+ * @LastEditTime: 2020-10-11 11:50:49
  * @LastEditors: Matt Meng
  * @Description: router configuration
  * @FilePath: /go/src/gin-blog/routers/router.go
@@ -12,6 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"gin-blog/pkg/setting"
 	"gin-blog/routers/api/v1"
+	"gin-blog/middleware/jwt"
 )
 
 
@@ -25,8 +26,13 @@ func InitRouter()*gin.Engine{
 	r.Use(gin.Recovery())
 	//根据配置设置运行模式
 	gin.SetMode(setting.RunMode)
+
+	//获取token路由绑定
+	r.GET("/auth",v1.GetAuth)
 	//
 	apiv1:=r.Group("api/v1")
+	//指定Group apiv1使用自定义的JWT中间件
+	apiv1.Use(jwt.JWT())
 	{
 		//获取标签列表
 		apiv1.GET("/tags",v1.GetTags)

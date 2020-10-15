@@ -2,14 +2,13 @@
  * @Author: Matt Meng
  * @Date: 1970-01-01 08:00:00
  * @LastEditors: Matt Meng
- * @LastEditTime: 2020-10-08 13:45:04
+ * @LastEditTime: 2020-10-15 22:19:15
  * @Description: tap api
  */
 
 package v1
 
 import(
-	"log"
     "net/http"
 
     "github.com/gin-gonic/gin"
@@ -19,7 +18,8 @@ import(
     "gin-blog/pkg/e"
     "gin-blog/models"
     "gin-blog/pkg/util"
-    "gin-blog/pkg/setting"
+	"gin-blog/pkg/setting"
+    "gin-blog/pkg/logging"
 )
 
 //获取多个文章标签
@@ -75,7 +75,7 @@ func AddTag(c *gin.Context){
 		// 如果有错误信息，证明验证没通过
         // 打印错误信息
         for _, err := range valid.Errors {
-            log.Println(err.Key, err.Message)
+            logging.Info(err.Key, err.Message)
         }
 	}
 
@@ -126,7 +126,7 @@ func EditTag(c *gin.Context){
 		// 如果有错误信息，证明验证没通过
         // 打印错误信息
         for _, err := range valid.Errors {
-            log.Println(err.Key, err.Message)
+            logging.Info(err.Key, err.Message)
         }
 	}
 	//构建返回的json数据
@@ -156,7 +156,7 @@ func DeleteTag(c *gin.Context){
 		// 如果有错误信息，证明验证没通过
         // 打印错误信息
         for _, err := range valid.Errors {
-            log.Println(err.Key, err.Message)
+            logging.Info(err.Key, err.Message)
         }
 	}
 	

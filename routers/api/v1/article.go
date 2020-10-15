@@ -2,13 +2,12 @@
  * @Author: Matt Meng
  * @Date: 1970-01-01 08:00:00
  * @LastEditors: Matt Meng
- * @LastEditTime: 2020-10-08 14:19:34
+ * @LastEditTime: 2020-10-15 22:18:08
  * @Description: file content
  */
 package v1
 
 import(
-	"log"
 	"net/http"
 
     "github.com/gin-gonic/gin"
@@ -19,6 +18,7 @@ import(
     "gin-blog/models"
     "gin-blog/pkg/util"
     "gin-blog/pkg/setting"
+    "gin-blog/pkg/logging"
 )
 
 //获取单个文章
@@ -39,7 +39,7 @@ func GetArticle(c *gin.Context){
 		}
 	}else{
 		for _,err:=range valid.Errors{
-			log.Printf("err.key:%s,err.message:%s",err.Key,err.Message)
+			logging.Info(err.Key,err.Message)
 		}
 	}
 
@@ -79,7 +79,7 @@ func GetArticles(c *gin.Context){
 
     } else {
         for _, err := range valid.Errors {
-            log.Printf("err.key: %s, err.message: %s", err.Key, err.Message)
+            logging.Info(err.Key, err.Message)
         }
 	}
 	
@@ -126,7 +126,7 @@ func AddArticle(c *gin.Context){
         }
     } else {
         for _, err := range valid.Errors {
-            log.Printf("err.key: %s, err.message: %s", err.Key, err.Message)
+            logging.Info(err.Key, err.Message)
         }
     }
 
@@ -191,7 +191,7 @@ func EditArticle(c *gin.Context){
         }
     } else {
         for _, err := range valid.Errors {
-            log.Printf("err.key: %s, err.message: %s", err.Key, err.Message)
+            logging.Info(err.Key, err.Message)
         }
     }
 
@@ -219,7 +219,7 @@ func DeleteArticle(c *gin.Context){
         }
     } else {
         for _, err := range valid.Errors {
-            log.Printf("err.key: %s, err.message: %s", err.Key, err.Message)
+            logging.Info(err.Key, err.Message)
         }
     }
 
