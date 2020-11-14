@@ -1,37 +1,54 @@
 /*
- * @Author: your name
+ * @Author: Matt Meng
  * @Date: 1970-01-01 08:00:00
- * @LastEditTime: 2020-10-15 23:05:55
  * @LastEditors: Matt Meng
- * @Description: In User Settings Edit
- * @FilePath: /go/src/gin-blog/main.go
+ * @LastEditTime: 2020-10-15 23:20:21
+ * @Description: file content
  */
 package main
 
-import(
-	"fmt"
-	"log"
-	"syscall"
+import (
+    "fmt"
+    "net/http"
+    "context"
+    "log"
+    "os"
+    "os/signal"
+    "time"
 
-	"github.com/fvbock/endless"
 
-	"gin-blog/pkg/setting"
-	"gin-blog/routers"
+    "gin-blog/routers"
+    "gin-blog/pkg/setting"
 )
 
-func main(){
-	endless.DefaultReadTimeOut = setting.ReadTimeout
-	endless.DefaultWriteTimeOut = setting.WriteTimeout
-	endless.DefaultMaxHeaderBytes = 1<<20
-	endPoint := fmt.Sprintf(":%d",setting.HTTPPort)
-	
-	server := endless.NewServer(endPoint,routers.InitRouter())
-	server.BeforeBegin = func(add string){
-		log.Printf("Article pis is %d",syscall.Getpid())
-	}
+func main() {
+    router := routers.InitRouter()
 
-	err := server.ListenAndServe()
-	if err!=nil {
-		log.Printf("Server err: %v",err)
-	}
+    s := &http.Server{
+        Addr:           fmt.Sprintf(":%d", setting.HTTPPort),
+        Handler:        router,
+        ReadTimeout:    setting.ReadTimeout,
+        WriteTimeout:   setting.WriteTimeout,
+        MaxHeaderBytes: 1 << 20,
+    }
+
+    go func() {
+        if err := s.ListenAndServe(); err != nil {
+            log.Printf("Listen: %s\n", err)
+        }
+    }()
+    
+    quit := make(chan os.Signal)
+    signal.Notify(quit, os.Interrupt)
+    <- quit
+
+    log.Println("Shutdown Server ...")
+
+    ctx, cancel := context.WithTimeout(context.Background(), 5 * time.Second)
+    defer cancel()
+    if err := s.Shutdown(ctx); err != nil {
+        log.Fatal("Server Shutdown:", err)
+    }
+
+    log.Println("Server exiting")
 }
