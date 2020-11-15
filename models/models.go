@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 1970-01-01 08:00:00
- * @LastEditTime: 2020-11-15 17:23:02
+ * @LastEditTime: 2020-11-15 20:54:17
  * @LastEditors: Matt Meng
  * @Description: In User Settings Edit
  * @FilePath: /go/src/gin-blog/models/models.go
@@ -24,6 +24,7 @@ type Model struct{
     ID int `gorm:"primary_key" json:"id"`
     CreatedOn int `json:"created_on"`
     ModifiedOn int `json:"modified_on"`
+    DeletedOn int `json:"deleted_on"`
 }
 
 func updateTimeStampForCreateCallback(scope *gorm.Scope){
@@ -46,6 +47,42 @@ func updateTimeStampForUpdateCallback(scope *gorm.Scope){
     if _,ok:=scope.Get("gorm:update_column");ok{
         scope.SetColumn("ModifiedOn",time.Now().Unix())
     }
+}
+
+func deleteCallback(scope *gorm.Scope) {
+    if !scope.HasError() {
+        var extraOption string
+        if str, ok := scope.Get("gorm:delete_option"); ok {
+            extraOption = fmt.Sprint(str)
+        }
+
+        deletedOnField, hasDeletedOnField := scope.FieldByName("DeletedOn")
+
+        if !scope.Search.Unscoped && hasDeletedOnField {
+            scope.Raw(fmt.Sprintf(
+                "UPDATE %v SET %v=%v%v%v",
+                scope.QuotedTableName(),
+                scope.Quote(deletedOnField.DBName),
+                scope.AddToVars(time.Now().Unix()),
+                addExtraSpaceIfExist(scope.CombinedConditionSql()),
+                addExtraSpaceIfExist(extraOption),
+            )).Exec()
+        } else {
+            scope.Raw(fmt.Sprintf(
+                "DELETE FROM %v%v%v",
+                scope.QuotedTableName(),
+                addExtraSpaceIfExist(scope.CombinedConditionSql()),
+                addExtraSpaceIfExist(extraOption),
+            )).Exec()
+        }
+    }
+}
+
+func addExtraSpaceIfExist(str string) string {
+    if str != "" {
+        return " " + str
+    }
+    return ""
 }
 
 func init(){
@@ -76,7 +113,7 @@ func init(){
     gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string)string{
         return tablePrefix+defaultTableName
     }
-
+    db.Callback().Delete().Replace("gorm:delete", deleteCallback)
     db.Callback().Create().Replace("gorm:update_time_stamp", updateTimeStampForCreateCallback)
     db.Callback().Update().Replace("gorm:update_time_stamp", updateTimeStampForUpdateCallback)
     //设置默认表名不使用对象名复数
