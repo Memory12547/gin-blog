@@ -2,16 +2,10 @@
  * @Author: Matt Meng
  * @Date: 1970-01-01 08:00:00
  * @LastEditors: Matt Meng
- * @LastEditTime: 2020-10-11 11:44:24
+ * @LastEditTime: 2020-11-15 17:27:15
  * @Description: file content
  */
 package models
-
-import (
-	"github.com/jinzhu/gorm"
-	"time"
-)
-
 type Article struct{
 	Model
 
@@ -24,16 +18,6 @@ type Article struct{
     CreatedBy string `json:"created_by"`
     ModifiedBy string `json:"modified_by"`
     State int `json:"state"`	
-}
-
-func (article *Article)BeforeCreate(scope *gorm.Scope)error{
-	scope.SetColumn("CreatedOn",time.Now().Unix())
-	return nil
-}
-
-func (article *Article)BeforeUpdate(scope *gorm.Scope)error{
-	scope.SetColumn("ModifiedOn",time.Now().Unix())
-	return nil
 }
 
 func ExistArticleByID(id int) bool{

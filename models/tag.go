@@ -2,15 +2,10 @@
  * @Author: Matt Meng
  * @Date: 1970-01-01 08:00:00
  * @LastEditors: Matt Meng
- * @LastEditTime: 2020-10-07 23:44:31
+ * @LastEditTime: 2020-11-15 17:27:08
  * @Description: file content
  */
 package models
-
-import (
-	"time"
-	"github.com/jinzhu/gorm"
-)
 
 type Tag struct {
 	Model
@@ -50,18 +45,6 @@ func AddTag(name string, state int, createdBy string)bool{
 	})
 
 	return true
-}
-
-func (tag *Tag)BeforeCreate(scope *gorm.Scope)error{
-	scope.SetColumn("CreatedOn",time.Now().Unix())
-
-	return nil
-}
-
-func (tag *Tag)BeforeUpdate(scope *gorm.Scope)error{
-	scope.SetColumn("ModifiedOn",time.Now().Unix())
-
-	return nil
 }
 
 func ExistTagByID(id int)bool{
