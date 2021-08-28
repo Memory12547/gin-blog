@@ -12,7 +12,7 @@ import(
 
     "github.com/gin-gonic/gin"
     "github.com/astaxie/beego/validation"
-    "github.com/Unknwon/com"
+    "github.com/unknwon/com"
 
     "gin-blog/pkg/e"
     "gin-blog/models"

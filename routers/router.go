@@ -1,7 +1,7 @@
 /*
  * @Author: Matt Meng
  * @Date: 2020-10-07 12:11:22
- * @LastEditTime: 2020-10-11 11:50:49
+ * @LastEditTime: 2021-08-28 15:18:58
  * @LastEditors: Matt Meng
  * @Description: router configuration
  * @FilePath: /go/src/gin-blog/routers/router.go
@@ -13,6 +13,9 @@ import (
 	"gin-blog/pkg/setting"
 	"gin-blog/routers/api/v1"
 	"gin-blog/middleware/jwt"
+	_ "gin-blog/docs"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
 
 
@@ -27,6 +30,7 @@ func InitRouter()*gin.Engine{
 	//根据配置设置运行模式
 	gin.SetMode(setting.RunMode)
 
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	//获取token路由绑定
 	r.GET("/auth",v1.GetAuth)
 	//

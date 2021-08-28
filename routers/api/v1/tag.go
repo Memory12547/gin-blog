@@ -2,7 +2,7 @@
  * @Author: Matt Meng
  * @Date: 1970-01-01 08:00:00
  * @LastEditors: Matt Meng
- * @LastEditTime: 2020-10-15 22:19:15
+ * @LastEditTime: 2021-08-28 14:56:10
  * @Description: tap api
  */
 
@@ -13,7 +13,7 @@ import(
 
     "github.com/gin-gonic/gin"
     "github.com/astaxie/beego/validation"
-    "github.com/Unknwon/com"
+    "github.com/unknwon/com"
 
     "gin-blog/pkg/e"
     "gin-blog/models"
@@ -22,7 +22,6 @@ import(
     "gin-blog/pkg/logging"
 )
 
-//获取多个文章标签
 func GetTags(c *gin.Context){
 	name:=c.Query("name")
 	maps:=make(map[string]interface{})
@@ -50,7 +49,13 @@ func GetTags(c *gin.Context){
 	})
 }
 
-//增加文章标签
+// @Summary 新增文章标签
+// @Produce json
+// @Param name body string true "标签名称" minlength(3) maxlength(100)
+// @Param state body int false "状态" Enums(0,1) defult(1)
+// @Param created_by body string true "创建者" minlength(3) maxlength(100)
+// @Success 200 {string} string "{"code":200,"data":{},"msg":"ok"}"
+// @Router /api/v1/tags [post]
 func AddTag(c *gin.Context){
 	name:=c.Query("name")
 	state:=com.StrTo(c.DefaultQuery("state","0")).MustInt()

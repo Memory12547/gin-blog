@@ -2,7 +2,7 @@
  * @Author: Matt Meng
  * @Date: 1970-01-01 08:00:00
  * @LastEditors: Matt Meng
- * @LastEditTime: 2020-10-15 23:20:21
+ * @LastEditTime: 2021-08-28 15:25:46
  * @Description: file content
  */
 package main
@@ -20,7 +20,10 @@ import (
     "gin-blog/routers"
     "gin-blog/pkg/setting"
 )
-
+// @title 博客系统
+// @version 1.0
+// @description Go 语言编程之旅： 一起用 Go 做项目
+// @termsofService https://github.com/go-programming-tour-book
 func main() {
     router := routers.InitRouter()
 
