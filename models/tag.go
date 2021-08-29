@@ -2,7 +2,7 @@
  * @Author: Matt Meng
  * @Date: 1970-01-01 08:00:00
  * @LastEditors: Matt Meng
- * @LastEditTime: 2020-11-15 17:27:08
+ * @LastEditTime: 2021-08-29 20:19:55
  * @Description: file content
  */
 package models
@@ -67,4 +67,10 @@ func EditTag(id int, data interface{}) bool {
 	db.Model(&Tag{}).Where("id=?", id).Updates(data)
 
 	return true
+}
+
+func CleanAllTag() bool {
+    db.Unscoped().Where("deleted_on != ? ", 0).Delete(&Tag{})
+
+    return true
 }

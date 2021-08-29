@@ -3,6 +3,7 @@ module gin-blog
 go 1.15
 
 require (
+	github.com/EDDYCJY/go-gin-example v0.0.0-20201228125222-28f372bf41f9
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/astaxie/beego v1.12.3
 	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
@@ -19,6 +20,7 @@ require (
 	github.com/kr/pty v1.1.5 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-isatty v0.0.13 // indirect
+	github.com/robfig/cron v1.2.0
 	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/stretchr/objx v0.2.0 // indirect
 	github.com/swaggo/files v0.0.0-20210815190702-a29dd2bc99b2 // indirect

@@ -2,7 +2,7 @@
  * @Author: Matt Meng
  * @Date: 1970-01-01 08:00:00
  * @LastEditors: Matt Meng
- * @LastEditTime: 2020-11-15 17:27:15
+ * @LastEditTime: 2021-08-29 20:21:49
  * @Description: file content
  */
 package models
@@ -74,4 +74,10 @@ func DeleteArticle(id int) bool {
 	db.Where("id=?", id).Delete(&Article{})
 
 	return true
+}
+
+func CleanAllArticle() bool {
+    db.Unscoped().Where("deleted_on != ? ", 0).Delete(&Article{})
+
+    return true
 }
