@@ -6,38 +6,39 @@
  * @Description: file content
  */
 package models
-type Article struct{
+
+type Article struct {
 	Model
 
 	TagID int `json:"tag_id" gorm:"index"`
-	Tag Tag `json:"tag"`
+	Tag   Tag `json:"tag"`
 
-	Title string `json:"title"`
-	Desc string `json:"desc"`
-	Content string `json:"content"`
-    CreatedBy string `json:"created_by"`
-    ModifiedBy string `json:"modified_by"`
-    State int `json:"state"`	
+	Title      string `json:"title"`
+	Desc       string `json:"desc"`
+	Content    string `json:"content"`
+	CreatedBy  string `json:"created_by"`
+	ModifiedBy string `json:"modified_by"`
+	State      int    `json:"state"`
 }
 
-func ExistArticleByID(id int) bool{
+func ExistArticleByID(id int) bool {
 	var article Article
-	db.Select("id").Where("id=?",id).First(&article)
+	db.Select("id").Where("id=?", id).First(&article)
 
-	if article.ID>0{
+	if article.ID > 0 {
 		return true
 	}
 
 	return false
 }
 
-func GetArticleTotal(maps interface{})(count int){
+func GetArticleTotal(maps interface{}) (count int) {
 	db.Model(&Article{}).Where(maps).Count(&count)
 	return
 }
 
-func GetArticle(id int)(article Article){
-	db.Where("id=?",id).First(&article)
+func GetArticle(id int) (article Article) {
+	db.Where("id=?", id).First(&article)
 	//关联查询？
 	db.Model(&article).Related(&article.Tag)
 
@@ -45,32 +46,32 @@ func GetArticle(id int)(article Article){
 }
 
 //查询一系列文章,通过Preload来装载对应文章的Tag成员
-func GetArticles(pageNum int, pageSize int, maps interface{})(articles []Article){
+func GetArticles(pageNum int, pageSize int, maps interface{}) (articles []Article) {
 	db.Preload("Tag").Where(maps).Offset(pageNum).Limit(pageSize).Find(&articles)
 
 	return
 }
 
-func EditArticle(id int,data interface{})bool{
-	db.Model(&Article{}).Where("id=?",id).Update(data)
+func EditArticle(id int, data interface{}) bool {
+	db.Model(&Article{}).Where("id=?", id).Update(data)
 	return true
 }
 
-func AddArticle(data map[string]interface{})bool{
+func AddArticle(data map[string]interface{}) bool {
 	db.Create(&Article{
-		TagID : data["tag_id"].(int),
-        Title : data["title"].(string),
-        Desc : data["desc"].(string),
-        Content : data["content"].(string),
-        CreatedBy : data["created_by"].(string),
-        State : data["state"].(int),	
+		TagID:     data["tag_id"].(int),
+		Title:     data["title"].(string),
+		Desc:      data["desc"].(string),
+		Content:   data["content"].(string),
+		CreatedBy: data["created_by"].(string),
+		State:     data["state"].(int),
 	})
 
 	return true
 }
 
-func DeleteArticle(id int)bool{
-	db.Where("id=?",id).Delete(&Article{})
+func DeleteArticle(id int) bool {
+	db.Where("id=?", id).Delete(&Article{})
 
 	return true
 }
